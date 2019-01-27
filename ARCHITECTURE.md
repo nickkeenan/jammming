@@ -3,15 +3,16 @@
 * Results
 * Track
 * TrackList
-  addToPlayList()
-  removeFromPlayList()
 * Playlist
+  removeFromPlayList()
   state {
     tracks: []
   }
   save()
 * SearchBar
 * SearchResults
+  addToPlayList()
+
 
 
 # Util

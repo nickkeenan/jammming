@@ -6,6 +6,8 @@
 
 .Track-action {
   cursor: pointer;
+  color: white;
+  text-decoration: none;
   padding: .5rem;
   font-size: 1.05rem;
   transition: color .25s;

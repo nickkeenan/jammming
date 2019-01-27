@@ -29,7 +29,7 @@ class SearchBar extends React.Component {
     return (
       <div className="SearchBar">
         <input placeholder="Enter A Song Title" onChange={this.handleTermChange} />
-        <a onClick={this.handleSearch}>SEARCH</a>
+        <a href="#" onClick={this.handleSearch}>SEARCH</a>
       </div>
     );
   }
