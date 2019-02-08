@@ -14,13 +14,26 @@ class SearchBar extends React.Component {
     }
   }
 
+  handleAddTrack(event) {
+    console.log('handle Remove Track');
+  }
+
+  handleRemoveTrack(event) {
+    console.log('handle Remove Track');
+  }
+
   handleTermChange(event) {
     this.setState({ q : event.target.value });
   }
 
   handleSearch(event) {
-    console.log('handleSearch:');
-    console.log(this.state);
+    if (this.props.userIsLoggedIn) {
+      console.log('handleSearch:');
+      console.log(this.state);
+    } else {
+      console.log('log the user in');
+    }
+
     // this.props.searchSpotify(this.state.q, this.state.searchType);
     // event.preventDefault();
   }

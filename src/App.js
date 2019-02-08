@@ -10,6 +10,7 @@ class App extends Component {
     super(props);
     this.state = {
       playlistName: 'New Playlist',
+      userIsLoggedIn: false,
       searchResults: [
         {
           id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYQ',
@@ -40,6 +41,38 @@ class App extends Component {
       ]
     }
     // TODO this.searchSpotify = this.searchSpotify.bind(this);
+
+    this.changeTitle = this.changeTitle.bind(this);
+    this.removeTrack = this.removeTrack.bind(this);
+    this.addTrack = this.addTrack.bind(this);
+  }
+
+
+
+  searchSpotify() {
+
+  }
+
+  changeTitle(title) {
+    this.state = { playlistName : title }
+  }
+
+  removeTrack(trackId) {
+    const tracks = this.state.selected;
+    for(var i = 0; i < tracks.length; i++){
+      if (tracks[i].id == trackId) {
+        delete tracks[trackId];
+      }
+    }
+
+    this.state = { selected : tracks }
+  }
+
+  addTrack(track) {
+    const tracks = this.state.selected;
+    const track_id = track.id;
+    tracks[track_id] = track;
+    this.state = { selected : tracks }
   }
 
   render() {
@@ -47,8 +80,8 @@ class App extends Component {
       <div className="App">
         <SearchBar />
         <div className="App-playlist">
-          <SearchResults searchResults={this.state.searchResults} />
-          <Playlist trackList={this.state.selected} name={this.state.playlistName}/>
+          <SearchResults searchResults={this.state.searchResults} userIsLoggedIn={this.state.userIsLoggedIn} onAddTrack={this.addTrack} />
+          <Playlist trackList={this.state.selected} name={this.state.playlistName} onTitleChange ={this.changeTitle} onRemoveTrack={this.removeTrack} />
         </div>
       </div>
     );
