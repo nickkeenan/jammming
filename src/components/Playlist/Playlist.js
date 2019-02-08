@@ -9,18 +9,18 @@ class Playlist extends React.Component {
     super(props);
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handlePlaylistChange = this.handlePlaylistChange.bind(this);
+    this.handlePlaylistRequest = this.handlePlaylistRequest.bind(this);
     this.handleSavePlaylist = this.handleSavePlaylist.bind(this);
 
   }
 
   handleTitleChange(event){
     const title = event.target.value;
-    this.props.onTitleChange(title);
+    this.props.handleTitleChange(title);
   }
 
-  handlePlaylistChange(trackId,action) {
-    this.props.onPlaylistChange(trackId,action);
+  handlePlaylistRequest(trackId,action,track) {
+    this.props.handleRemoveTrack(trackId,action,track);
   }
 
   handleSavePlaylist(event) {
@@ -28,12 +28,11 @@ class Playlist extends React.Component {
   }
 
   render() {
-    console.log(this.props.trackList);
     return (
-      <div class="Playlist">
+      <div className="Playlist">
         <input defaultValue={this.props.name} onChange={this.handleTitleChange} />
-        <TrackList trackList={this.props.trackList} action='remove' onChange={this.handlePlaylistChange} />
-        <a class="Playlist-save" onClick={this.handleSavePlaylist}>SAVE TO SPOTIFY</a>
+        <TrackList trackList={this.props.trackList} action='remove' handlePlaylistRequest={this.handlePlaylistRequest} />
+        <a className="Playlist-save" onClick={this.handleSavePlaylist}>SAVE TO SPOTIFY</a>
       </div>
     );
   }

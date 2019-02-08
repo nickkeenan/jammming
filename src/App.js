@@ -42,9 +42,9 @@ class App extends Component {
     }
     // TODO this.searchSpotify = this.searchSpotify.bind(this);
 
-    this.changeTitle = this.changeTitle.bind(this);
-    this.removeTrack = this.removeTrack.bind(this);
-    this.addTrack = this.addTrack.bind(this);
+    this.handleChangeTitle = this.handleChangeTitle.bind(this);
+    this.handleRemoveTrack = this.handleRemoveTrack.bind(this);
+    this.handleAddTrack = this.handleAddTrack.bind(this);
   }
 
 
@@ -53,26 +53,25 @@ class App extends Component {
 
   }
 
-  changeTitle(title) {
+  handleChangeTitle(title) {
     this.state = { playlistName : title }
   }
 
-  removeTrack(trackId) {
+  handleRemoveTrack(trackId, action, track) {
     const tracks = this.state.selected;
     for(var i = 0; i < tracks.length; i++){
-      if (tracks[i].id == trackId) {
-        delete tracks[trackId];
+      if (tracks[i] === track) {
+        tracks.shift(i, 1);
       }
     }
-
-    this.state = { selected : tracks }
+    this.setState({ selected : tracks });
   }
 
-  addTrack(track) {
+  handleAddTrack(trackId, action, track) {
     const tracks = this.state.selected;
     const track_id = track.id;
-    tracks[track_id] = track;
-    this.state = { selected : tracks }
+    tracks.push(track);
+    this.setState({ selected : tracks });
   }
 
   render() {
@@ -80,8 +79,8 @@ class App extends Component {
       <div className="App">
         <SearchBar />
         <div className="App-playlist">
-          <SearchResults searchResults={this.state.searchResults} userIsLoggedIn={this.state.userIsLoggedIn} onAddTrack={this.addTrack} />
-          <Playlist trackList={this.state.selected} name={this.state.playlistName} onTitleChange ={this.changeTitle} onRemoveTrack={this.removeTrack} />
+          <SearchResults searchResults={this.state.searchResults} userIsLoggedIn={this.state.userIsLoggedIn} handleAddTrack={this.handleAddTrack} />
+          <Playlist trackList={this.state.selected} name={this.state.playlistName} handleTitleChange ={this.handleChangeTitle} handleRemoveTrack={this.handleRemoveTrack} />
         </div>
       </div>
     );

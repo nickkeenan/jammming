@@ -7,18 +7,18 @@ class TrackList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handlePlaylistRequest = this.handlePlaylistRequest.bind(this);
   }
 
-  handleChange(trackId,action) {
-    this.props.onChange(trackId,action);
+  handlePlaylistRequest(trackId,action,track) {
+    this.props.handlePlaylistRequest(trackId,action,track);
   }
 
   render() {
     return (
       <div className="TrackList">
         {this.props.trackList.map((track) => {
-          return <Track track={track} action={this.props.action} key={track.id} onAction={this.handleChange} /> ;
+          return <Track track={track} action={this.props.action} key={track.id} handlePlaylistRequest={this.handlePlaylistRequest} /> ;
         })}
       </div>
     );

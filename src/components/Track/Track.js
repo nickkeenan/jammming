@@ -9,9 +9,7 @@ class Track extends React.Component {
   }
 
   handleChange(event) {
-    const trackId = event.target.dataset.trackid;
-    console.log(trackId);
-    this.props.onAction(trackId,this.props.action);
+    this.props.handlePlaylistRequest(this.props.track.trackid,this.props.action, this.props.track);
     event.preventDefault();
   }
 
