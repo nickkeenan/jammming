@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SearchResults from './components/SearchResults/SearchResults';
 import SearchBar from './components/SearchBar/SearchBar';
 import Playlist from './components/Playlist/Playlist';
+import Spotify from './util/Spotify';
 import './App.css';
 
 class App extends Component {
@@ -9,8 +10,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      playlistName: 'New Playlist',
-      userIsLoggedIn: false,
+      userAccessToken: false,
       searchResults: [
         {
           id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYQ',
@@ -45,6 +45,7 @@ class App extends Component {
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleRemoveTrack = this.handleRemoveTrack.bind(this);
     this.handleAddTrack = this.handleAddTrack.bind(this);
+    this.searchSpotify = this.searchSpotify.bind(this);
   }
 
 
@@ -74,13 +75,23 @@ class App extends Component {
     this.setState({ selected : tracks });
   }
 
+  searchSpotify(term,searchType) {
+    if (!this.state.userAccessToken) {
+      const access_token = Spotify.getAccessToken();
+      this.setState({ userAccessToken : access_token });
+    } else {
+      // Peform Search
+      console.log(this.state.userAccessToken);
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        <SearchBar />
+        <SearchBar searchSpotify={this.searchSpotify} />
         <div className="App-playlist">
-          <SearchResults searchResults={this.state.searchResults} userIsLoggedIn={this.state.userIsLoggedIn} handleAddTrack={this.handleAddTrack} />
-          <Playlist trackList={this.state.selected} name={this.state.playlistName} handleTitleChange ={this.handleChangeTitle} handleRemoveTrack={this.handleRemoveTrack} />
+          <SearchResults searchResults={this.state.searchResults} userAccessToken={this.state.userAccessToken} handleAddTrack={this.handleAddTrack} />
+          <Playlist trackList={this.state.selected} handleRemoveTrack={this.handleRemoveTrack} />
         </div>
       </div>
     );

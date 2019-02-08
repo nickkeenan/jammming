@@ -8,6 +8,10 @@ class Playlist extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      name: 'New Playlist'
+    }
+
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handlePlaylistRequest = this.handlePlaylistRequest.bind(this);
     this.handleSavePlaylist = this.handleSavePlaylist.bind(this);
@@ -16,7 +20,7 @@ class Playlist extends React.Component {
 
   handleTitleChange(event){
     const title = event.target.value;
-    this.props.handleTitleChange(title);
+    this.setState({ name : title });
   }
 
   handlePlaylistRequest(trackId,action,track) {
@@ -30,7 +34,7 @@ class Playlist extends React.Component {
   render() {
     return (
       <div className="Playlist">
-        <input defaultValue={this.props.name} onChange={this.handleTitleChange} />
+        <input defaultValue={this.state.name} onChange={this.handleTitleChange} />
         <TrackList trackList={this.props.trackList} action='remove' handlePlaylistRequest={this.handlePlaylistRequest} />
         <a className="Playlist-save" onClick={this.handleSavePlaylist}>SAVE TO SPOTIFY</a>
       </div>

@@ -9,7 +9,7 @@ class SearchBar extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.state = {
-      q: '',
+      term: '',
       searchType: 'album,artist,track'
     }
   }
@@ -23,19 +23,12 @@ class SearchBar extends React.Component {
   }
 
   handleTermChange(event) {
-    this.setState({ q : event.target.value });
+    this.setState({ term : event.target.value });
   }
 
   handleSearch(event) {
-    if (this.props.userIsLoggedIn) {
-      console.log('handleSearch:');
-      console.log(this.state);
-    } else {
-      console.log('log the user in');
-    }
-
-    // this.props.searchSpotify(this.state.q, this.state.searchType);
-    // event.preventDefault();
+    this.props.searchSpotify(this.state.term, this.state.searchType);
+    event.preventDefault();
   }
 
   render() {
