@@ -11,6 +11,8 @@ class App extends Component {
     super(props);
     this.state = {
       userAccessToken: false,
+      userId: false,
+      playlistId: false,
       searchResults: [],
       selected: []
     }
@@ -20,10 +22,11 @@ class App extends Component {
     this.handleRemoveTrack = this.handleRemoveTrack.bind(this);
     this.handleAddTrack = this.handleAddTrack.bind(this);
     this.searchSpotify = this.searchSpotify.bind(this);
+    this.saveToSpotify = this.saveToSpotify.bind(this);
   }
 
   handleChangeTitle(title) {
-    this.state = { playlistName : title }
+    this.setState({ playlistName : title });
   }
 
   handleRemoveTrack(trackId, action, track) {
@@ -38,21 +41,40 @@ class App extends Component {
 
   handleAddTrack(trackId, action, track) {
     const tracks = this.state.selected;
-    const track_id = track.id;
     tracks.push(track);
     this.setState({ selected : tracks });
   }
 
   searchSpotify(term,searchType) {
-    if (!this.state.userAccessToken) {
+    if (!this.state.userAccessToken || !this.state.userId) {
+      // Get User Token and ID
       const access_token = Spotify.getAccessToken();
-      this.setState({ userAccessToken : access_token });
+      Spotify.getUserId(access_token).then(userId => {
+        this.setState({
+          userAccessToken : access_token,
+          userId : userId
+        });
+      })
     } else {
-      // Peform Search
-      const tracksResult = Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
+      // Perform Search
+      Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
         this.setState({ searchResults : tracksResult });
       });
     }
+  }
+
+  saveToSpotify(playlistName) {
+    let playlistId = false;
+    if (this.state.playlistId) {
+      playlistId = this.state.playlistId;
+    } else {
+      playlistId = Spotify.createPlaylist(this.state.userAccessToken,this.state.userId,playlistName);
+    }
+    if (playlistId) {
+      console.log(`playlistId: ${playlistId}`);
+    }
+    // this.setState({ playlistId : playlistId });
+
   }
 
   render() {
@@ -61,7 +83,7 @@ class App extends Component {
         <SearchBar searchSpotify={this.searchSpotify} />
         <div className="App-playlist">
           <SearchResults searchResults={this.state.searchResults} userAccessToken={this.state.userAccessToken} handleAddTrack={this.handleAddTrack} />
-          <Playlist trackList={this.state.selected} handleRemoveTrack={this.handleRemoveTrack} />
+          <Playlist trackList={this.state.selected} handleRemoveTrack={this.handleRemoveTrack} handleSavePlaylist={this.saveToSpotify} />
         </div>
       </div>
     );

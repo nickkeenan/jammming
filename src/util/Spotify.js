@@ -15,6 +15,7 @@ const Spotify = {
    }
    return hashParams;
   },
+
   generateRandomString(length){
     /*
      * Generates a random string containing numbers and letters
@@ -28,23 +29,19 @@ const Spotify = {
     }
     return text;
   },
+
   getAccessToken(){
     const params = this.getHashParams();
     const access_token = params.access_token;
-    const state = params.state;
-    const stateKey = 'spotify_auth_state';
-
-    const storedState = localStorage.getItem(stateKey);
 
     if (access_token) {
       return access_token
     } else {
 
       // check if the access_token is stored
-
       const state = this.generateRandomString(16);
-      localStorage.setItem(stateKey, state);
-      const scope = 'user-read-private user-read-email';
+      // localStorage.setItem(stateKey, state);
+      const scope = 'playlist-modify-public playlist-modify-private';
       let url = 'https://accounts.spotify.com/authorize';
       url += '?response_type=token';
       url += '&client_id=' + encodeURIComponent(client_id);
@@ -54,6 +51,22 @@ const Spotify = {
       window.location = url;
     }
   },
+
+  getUserId(userAccessToken) {
+    let url = `https://api.spotify.com/v1/me`;
+    return fetch(`${url}`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`
+      }
+    }).then(response => {
+      return response.json();
+    }).then(jsonResponse => {
+      if (jsonResponse.id) {
+        return jsonResponse.id;
+      }
+    });
+  },
+
   search(userAccessToken,term,searchType) {
     let url = 'https://api.spotify.com/v1/search';
     return fetch(`${url}?q=${term}&type=${searchType}`, {
@@ -72,6 +85,27 @@ const Spotify = {
             album: track.album.name
           }
         });
+      }
+    });
+  },
+
+  createPlaylist(userAccessToken,userId,playlistName) {
+    let url = `https://api.spotify.com/v1/users/${userId}/playlists`;
+    const data = {
+      name : playlistName
+    };
+    return fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userAccessToken}`
+      }
+    }).then(response => {
+      return response.json();
+    }).then(jsonResponse => {
+      if (jsonResponse.id) {
+        return jsonResponse.id;
       }
     });
   }
