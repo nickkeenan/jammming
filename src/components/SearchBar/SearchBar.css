@@ -21,13 +21,14 @@
   outline: none;
 }
 
-.SearchBar a {
+.SearchBar button {
   cursor: pointer;
   color: white;
   text-decoration: none;
   width: 8.11rem;
   padding: .77rem 0;
   border-radius: 54px;
+  border: 0;
   background-color: #010c3f;
   text-align: center;
   font-size: .833rem;

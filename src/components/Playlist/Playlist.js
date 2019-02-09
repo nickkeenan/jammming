@@ -28,7 +28,7 @@ class Playlist extends React.Component {
   }
 
   handleSavePlaylist(event) {
-    console.log('handleSavePlaylist');
+    this.props.handleSavePlaylist(this.state.name);
   }
 
   render() {
@@ -36,7 +36,7 @@ class Playlist extends React.Component {
       <div className="Playlist">
         <input defaultValue={this.state.name} onChange={this.handleTitleChange} />
         <TrackList trackList={this.props.trackList} action='remove' handlePlaylistRequest={this.handlePlaylistRequest} />
-        <a className="Playlist-save" onClick={this.handleSavePlaylist}>SAVE TO SPOTIFY</a>
+        <button className="Playlist-save" onClick={this.handleSavePlaylist}>SAVE TO SPOTIFY</button>
       </div>
     );
   }

@@ -20,7 +20,7 @@ class Track extends React.Component {
           <h3>{this.props.track.name}</h3>
           <p>{this.props.track.artist} | {this.props.track.album}</p>
         </div>
-        <a className="Track-action" data-trackid={this.props.track.id} href="#" onClick={this.handleChange}>{(this.props.action == 'add') ? '+' : '-'}</a>
+        <button className="Track-action" data-trackid={this.props.track.id} href="#" onClick={this.handleChange}>{(this.props.action === 'add') ? '+' : '-'}</button>
       </div>
     )
   }

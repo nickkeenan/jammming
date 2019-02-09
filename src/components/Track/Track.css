@@ -4,6 +4,11 @@
   border-bottom: 1px solid rgba(256, 256, 256, 0.8);
 }
 
+.Track button {
+  background: transparent;
+  border: 0;
+}
+
 .Track-action {
   cursor: pointer;
   color: white;
