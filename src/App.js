@@ -16,7 +16,7 @@ class App extends Component {
       searchResults: [],
       selected: [],
       saveButtonText: 'SAVE TO SPOTIFY'
-    }
+    };
     // TODO this.searchSpotify = this.searchSpotify.bind(this);
 
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
@@ -56,19 +56,25 @@ class App extends Component {
           userId : userId,
           saveButtonText: 'SAVE TO SPOTIFY'
         });
-      })
-    } else {
-      // Perform Search
-      Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
-        this.setState({ searchResults : tracksResult, saveButtonText : 'SAVE TO SPOTIFY' });
       });
+    } else {
+      if (term) {
+        // Perform Search
+        Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
+          this.setState({ searchResults : tracksResult, saveButtonText : 'SAVE TO SPOTIFY' });
+        });
+      } else {
+        this.setState({ searchResults : [] });
+      }
     }
   }
 
   saveToSpotify(playlistName) {
     if (this.state.selected.length > 0) {
       Spotify.createPlaylist(this.state.userAccessToken,this.state.userId,playlistName).then(playlistId => {
-        if (playlistId) {
+        if (!playlistId) {
+          this.setState({ saveButtonText : 'ERROR SAVING' });
+        } else {
           // build an array of Spotify uris
           const tracks = this.state.selected.map(track => {
             return track.uri;
@@ -83,7 +89,7 @@ class App extends Component {
         }
       });
     } else {
-      this.setState({ saveButtonText : 'ADD SOME TRACKS' })
+      this.setState({ saveButtonText : 'ADD SOME TRACKS' });
     }
 
   }

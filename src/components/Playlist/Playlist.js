@@ -10,7 +10,7 @@ class Playlist extends React.Component {
 
     this.state = {
       name: 'New Playlist'
-    }
+    };
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handlePlaylistRequest = this.handlePlaylistRequest.bind(this);

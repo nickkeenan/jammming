@@ -35,7 +35,7 @@ const Spotify = {
     const access_token = params.access_token;
 
     if (access_token) {
-      return access_token
+      return access_token;
     } else {
 
       // check if the access_token is stored
@@ -84,7 +84,7 @@ const Spotify = {
             name: track.name,
             artist: track.artists[0].name,
             album: track.album.name
-          }
+          };
         });
       }
     });
@@ -134,6 +134,6 @@ const Spotify = {
     });
   }
 
-}
+};
 
 export default Spotify;

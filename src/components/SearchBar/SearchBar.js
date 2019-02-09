@@ -11,15 +11,7 @@ class SearchBar extends React.Component {
     this.state = {
       term: '',
       searchType: 'album,artist,track'
-    }
-  }
-
-  handleAddTrack(event) {
-    console.log('handle Remove Track');
-  }
-
-  handleRemoveTrack(event) {
-    console.log('handle Remove Track');
+    };
   }
 
   handleTermChange(event) {
@@ -34,7 +26,7 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div className="SearchBar">
-        <input placeholder="Enter A Song Title" onChange={this.handleTermChange} />
+        <input onChange={this.handleTermChange} placeholder="Enter A Song Title" />
         <button href="#" onClick={this.handleSearch}>SEARCH</button>
       </div>
     );
