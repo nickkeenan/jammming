@@ -11,34 +11,8 @@ class App extends Component {
     super(props);
     this.state = {
       userAccessToken: false,
-      searchResults: [
-        {
-          id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYQ',
-          name: 'Who Hurt You?',
-          artist: 'Daniel Caesar',
-          album: 'Freudian'
-        },
-        {
-          id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYA',
-          name: 'Nights Like This',
-          artist: 'Kehlani & Ty Dolla $ign',
-          album: 'Nights Like This'
-        }
-      ],
-      selected: [
-        {
-          id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYC',
-          name: 'A Sunday Smile',
-          artist: 'Beirut',
-          album: 'Riptide'
-        },
-        {
-          id: '23c9gmiiv7RCu7twft0Mym?si=eEYJE4NCR_CHG55tvjpsYB',
-          name: 'Take a Picture',
-          artist: 'Filter',
-          album: 'Title of Record'
-        }
-      ]
+      searchResults: [],
+      selected: []
     }
     // TODO this.searchSpotify = this.searchSpotify.bind(this);
 
@@ -46,12 +20,6 @@ class App extends Component {
     this.handleRemoveTrack = this.handleRemoveTrack.bind(this);
     this.handleAddTrack = this.handleAddTrack.bind(this);
     this.searchSpotify = this.searchSpotify.bind(this);
-  }
-
-
-
-  searchSpotify() {
-
   }
 
   handleChangeTitle(title) {
@@ -81,7 +49,9 @@ class App extends Component {
       this.setState({ userAccessToken : access_token });
     } else {
       // Peform Search
-      console.log(this.state.userAccessToken);
+      const tracksResult = Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
+        this.setState({ searchResults : tracksResult });
+      });
     }
   }
 

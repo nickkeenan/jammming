@@ -53,12 +53,28 @@ const Spotify = {
       url += '&state=' + encodeURIComponent(state);
       window.location = url;
     }
+  },
+  search(userAccessToken,term,searchType) {
+    let url = 'https://api.spotify.com/v1/search';
+    return fetch(`${url}?q=${term}&type=${searchType}`, {
+      headers: {
+        Authorization: `Bearer ${userAccessToken}`
+      }
+    }).then(response => {
+      return response.json();
+    }).then(jsonResponse => {
+      if(jsonResponse.tracks) {
+        return jsonResponse.tracks.items.map(track => {
+          return {
+            id: track.id,
+            name: track.name,
+            artist: track.artists[0].name,
+            album: track.album.name
+          }
+        });
+      }
+    });
   }
-
-
-
-
-
 
 }
 
