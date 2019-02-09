@@ -80,6 +80,7 @@ const Spotify = {
         return jsonResponse.tracks.items.map(track => {
           return {
             id: track.id,
+            uri: track.uri,
             name: track.name,
             artist: track.artists[0].name,
             album: track.album.name
@@ -106,6 +107,29 @@ const Spotify = {
     }).then(jsonResponse => {
       if (jsonResponse.id) {
         return jsonResponse.id;
+      }
+    });
+  },
+
+  addTracksToPlaylist(userAccessToken,playlistId,tracks) {
+    let url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+    const data = {
+      uris : tracks
+    };
+    return fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userAccessToken}`
+      }
+    }).then(response => {
+      return response.json();
+    }).then(jsonResponse => {
+      if (jsonResponse.snapshot_id) {
+        return jsonResponse.snapshot_id;
+      } else {
+        return false;
       }
     });
   }

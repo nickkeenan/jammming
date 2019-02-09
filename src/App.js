@@ -14,7 +14,8 @@ class App extends Component {
       userId: false,
       playlistId: false,
       searchResults: [],
-      selected: []
+      selected: [],
+      saveButtonText: 'SAVE TO SPOTIFY'
     }
     // TODO this.searchSpotify = this.searchSpotify.bind(this);
 
@@ -26,7 +27,7 @@ class App extends Component {
   }
 
   handleChangeTitle(title) {
-    this.setState({ playlistName : title });
+    this.setState({ playlistName : title, saveButtonText: 'SAVE TO SPOTIFY'});
   }
 
   handleRemoveTrack(trackId, action, track) {
@@ -36,13 +37,13 @@ class App extends Component {
         tracks.shift(i, 1);
       }
     }
-    this.setState({ selected : tracks });
+    this.setState({ selected : tracks, saveButtonText: 'SAVE TO SPOTIFY' });
   }
 
   handleAddTrack(trackId, action, track) {
     const tracks = this.state.selected;
     tracks.push(track);
-    this.setState({ selected : tracks });
+    this.setState({ selected : tracks, saveButtonText: 'SAVE TO SPOTIFY' });
   }
 
   searchSpotify(term,searchType) {
@@ -52,28 +53,38 @@ class App extends Component {
       Spotify.getUserId(access_token).then(userId => {
         this.setState({
           userAccessToken : access_token,
-          userId : userId
+          userId : userId,
+          saveButtonText: 'SAVE TO SPOTIFY'
         });
       })
     } else {
       // Perform Search
       Spotify.search(this.state.userAccessToken,term,searchType).then(tracksResult => {
-        this.setState({ searchResults : tracksResult });
+        this.setState({ searchResults : tracksResult, saveButtonText : 'SAVE TO SPOTIFY' });
       });
     }
   }
 
   saveToSpotify(playlistName) {
-    let playlistId = false;
-    if (this.state.playlistId) {
-      playlistId = this.state.playlistId;
+    if (this.state.selected.length > 0) {
+      Spotify.createPlaylist(this.state.userAccessToken,this.state.userId,playlistName).then(playlistId => {
+        if (playlistId) {
+          // build an array of Spotify uris
+          const tracks = this.state.selected.map(track => {
+            return track.uri;
+          });
+          Spotify.addTracksToPlaylist(this.state.userAccessToken,playlistId,tracks).then(snapshot_id => {
+            if (snapshot_id) {
+              this.setState({ selected : [], playlistName : 'New Playlist', saveButtonText : 'PLAYLIST SAVED'} );
+            } else {
+              this.setState({ saveButtonText : 'ERROR SAVING' });
+            }
+          });
+        }
+      });
     } else {
-      playlistId = Spotify.createPlaylist(this.state.userAccessToken,this.state.userId,playlistName);
+      this.setState({ saveButtonText : 'ADD SOME TRACKS' })
     }
-    if (playlistId) {
-      console.log(`playlistId: ${playlistId}`);
-    }
-    // this.setState({ playlistId : playlistId });
 
   }
 
@@ -83,7 +94,7 @@ class App extends Component {
         <SearchBar searchSpotify={this.searchSpotify} />
         <div className="App-playlist">
           <SearchResults searchResults={this.state.searchResults} userAccessToken={this.state.userAccessToken} handleAddTrack={this.handleAddTrack} />
-          <Playlist trackList={this.state.selected} handleRemoveTrack={this.handleRemoveTrack} handleSavePlaylist={this.saveToSpotify} />
+          <Playlist trackList={this.state.selected} handleRemoveTrack={this.handleRemoveTrack} handleSavePlaylist={this.saveToSpotify} saveButtonText={this.state.saveButtonText} />
         </div>
       </div>
     );
